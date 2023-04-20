@@ -1,0 +1,2 @@
+recursive-include waifu2x_ncnn_py/models *
+recursive-include waifu2x_ncnn_py waifu2x_ncnn_vulkan_wrapper.*.*
