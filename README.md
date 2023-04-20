@@ -1,5 +1,5 @@
 # waifu2x-ncnn-py
-Python Binding for waifu2x-ncnn-py with PyBind11 [![PyPI version](https://badge.fury.io/py/waifu2x-ncnn-py.svg?123456)](https://badge.fury.io/py/waifu2x-ncnn-py?123456) [![test_pip](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml) [![Release](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml)
+Python Binding for waifu2x-ncnn-vulkan with PyBind11 [![PyPI version](https://badge.fury.io/py/waifu2x-ncnn-py.svg?123456)](https://badge.fury.io/py/waifu2x-ncnn-py?123456) [![test_pip](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml) [![Release](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml)
 
 Image Super-Resolution for Anime-style art using Deep Convolutional Neural Networks. And it supports photo.
 
