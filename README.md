@@ -1,7 +1,7 @@
 # waifu2x-ncnn-py
 Python Binding for waifu2x-ncnn-vulkan with PyBind11 [![PyPI version](https://badge.fury.io/py/waifu2x-ncnn-py.svg?123456)](https://badge.fury.io/py/waifu2x-ncnn-py?123456) [![test_pip](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml) [![Release](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml)
 
-Image Super-Resolution for Anime-style art using Deep Convolutional Neural Networks. And it supports photo.
+Image Super-Resolution for Anime-style art using Deep Convolutional Neural Networks. And it supports photo. This wrapper provides an easy-to-use interface for running the pre-trained Waifu2x model.
 
 ### Current building status matrix
 | System        | Status                                                                                                                                                                                                                              | CPU (32bit)  |  CPU (64bit)       | GPU (32bit)  | GPU (64bit)        |
