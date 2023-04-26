@@ -1,18 +1,18 @@
 #include "waifu2x_wrapped.h"
 
 // Image Data Structure
-Image::Image(std::string d, int w, int h, int c) {
+Waifu2xImage::Waifu2xImage(std::string d, int w, int h, int c) {
     this->d = std::move(d);
     this->w = w;
     this->h = h;
     this->c = c;
 }
 
-void Image::set_data(std::string data) {
+void Waifu2xImage::set_data(std::string data) {
     this->d = std::move(data);
 }
 
-pybind11::bytes Image::get_data() const {
+pybind11::bytes Waifu2xImage::get_data() const {
     return pybind11::bytes(this->d);
 }
 
@@ -97,7 +97,7 @@ int Waifu2xWrapped::load(const std::string &parampath,
 #endif
 }
 
-int Waifu2xWrapped::process(const Image &inimage, Image &outimage) const {
+int Waifu2xWrapped::process(const Waifu2xImage &inimage, Waifu2xImage &outimage) const {
     int c = inimage.c;
     ncnn::Mat inimagemat =
             ncnn::Mat(inimage.w, inimage.h, (void *) inimage.d.data(), (size_t) c, c);
@@ -106,7 +106,7 @@ int Waifu2xWrapped::process(const Image &inimage, Image &outimage) const {
     return Waifu2x::process(inimagemat, outimagemat);
 }
 
-int Waifu2xWrapped::process_cpu(const Image &inimage, Image &outimage) const {
+int Waifu2xWrapped::process_cpu(const Waifu2xImage &inimage, Waifu2xImage &outimage) const {
     int c = inimage.c;
     ncnn::Mat inimagemat =
             ncnn::Mat(inimage.w, inimage.h, (void *) inimage.d.data(), (size_t) c, c);
@@ -127,10 +127,10 @@ PYBIND11_MODULE(waifu2x_ncnn_vulkan_wrapper, m) {
             .def("process_cpu", &Waifu2xWrapped::process_cpu)
             .def("set_parameters", &Waifu2xWrapped::set_parameters);
 
-    pybind11::class_<Image>(m, "Image")
+    pybind11::class_<Waifu2xImage>(m, "Waifu2xImage")
             .def(pybind11::init<std::string, int, int, int>())
-            .def("get_data", &Image::get_data)
-            .def("set_data", &Image::set_data);
+            .def("get_data", &Waifu2xImage::get_data)
+            .def("set_data", &Waifu2xImage::set_data);
 
     m.def("get_gpu_count", &get_gpu_count);
 

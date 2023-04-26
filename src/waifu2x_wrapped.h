@@ -9,14 +9,14 @@
 #include <iostream>
 
 // wrapper class of ncnn::Mat
-class Image {
+class Waifu2xImage {
 public:
     std::string d;
     int w;
     int h;
     int c;
 
-    Image(std::string d, int w, int h, int c);
+    Waifu2xImage(std::string d, int w, int h, int c);
 
     void set_data(std::string data);
 
@@ -36,9 +36,9 @@ public:
 
     int load(const std::string &parampath, const std::string &modelpath);
 
-    int process(const Image &inimage, Image &outimage) const;
+    int process(const Waifu2xImage &inimage, Waifu2xImage &outimage) const;
 
-    int process_cpu(const Image &inimage, Image &outimage) const;
+    int process_cpu(const Waifu2xImage &inimage, Waifu2xImage &outimage) const;
 
 private:
     int gpuid;
