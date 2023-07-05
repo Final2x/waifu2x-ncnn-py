@@ -4,6 +4,9 @@ from setuptools import setup
 from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 import sys
 
+_version = '1.3.0'
+
+
 class bdist_wheel(_bdist_wheel):
     def finalize_options(self):
         _bdist_wheel.finalize_options(self)
@@ -13,7 +16,7 @@ class bdist_wheel(_bdist_wheel):
 _options = {}
 if sys.platform == "darwin":
     _options = {
-        "bdist_wheel": {"plat_name": "macosx_12_0_universal2"},
+        "bdist_wheel": {"plat_name": "macosx_11_0_universal2"},
     } if sys.version_info[1] >= 9 else {
         "bdist_wheel": {"plat_name": "macosx_10_15_x86_64"},
     }
@@ -21,11 +24,10 @@ elif sys.platform == "linux":
     _options = {
         "bdist_wheel": {"plat_name": "manylinux1_x86_64"},
     }
-    
 
 setup(
     name='waifu2x_ncnn_py',
-    version=open('version.txt', encoding='utf-8').read(),
+    version=_version,
     description='',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
