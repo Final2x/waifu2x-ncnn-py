@@ -20,7 +20,7 @@ jobs:
   macos:
     strategy:
       matrix:
-        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: macos-latest
     steps:
@@ -32,10 +32,16 @@ jobs:
         with:
           xcode-version: '14.2.0'
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.8.2
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -85,41 +91,32 @@ jobs:
           cmake --build . -j 4
 
 
-      - name: merge-fat-library-py36m
-        if: matrix.python-version == '3.6'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so
-      - name: merge-fat-library-py37m
-        if: matrix.python-version == '3.7'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so
       - name: merge-fat-library-py38
         if: matrix.python-version == '3.8'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
+        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
       - name: merge-fat-library-py39
         if: matrix.python-version == '3.9'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
+        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
       - name: merge-fat-library-py310
         if: matrix.python-version == '3.10'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
+        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
       - name: merge-fat-library-py311
         if: matrix.python-version == '3.11'
-        run: mkdir -p dist && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o dist/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
+        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
+      - name: merge-fat-library-py312
+        if: matrix.python-version == '3.12'
+        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so
 
       - name: Test
         run: |
-          pip install --upgrade pip chardet
-          pip install -r requirements.txt
-          cp src/waifu2x_ncnn_vulkan.py test
-          cp dist/waifu2x_ncnn_vulkan_wrapper.*.so test
-          cp -r models test
-          cd test
-          ls
-          python -m pytest
+          cp lib/waifu2x_ncnn_vulkan_wrapper.*.so src/waifu2x_ncnn_py
+          pdm run dev
+          pdm run test
 
-      - name: Upload dist
+      - name: dist
         run: |
-          cp src/waifu2x_ncnn_vulkan.py dist
-          cp -r models dist
-
+          mkdir dist
+          cp src/waifu2x_ncnn_py dist
 
       - name: upload
         uses: actions/upload-artifact@v3

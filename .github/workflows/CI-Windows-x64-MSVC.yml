@@ -18,7 +18,7 @@ jobs:
   windows:
     strategy:
       matrix:
-        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: windows-latest
     steps:
@@ -26,10 +26,16 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.8.2
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -60,27 +66,14 @@ jobs:
 
       - name: Test
         run: |
-          pip install --upgrade pip chardet
-          pip install -r requirements.txt
-          cd test
-          mkdir models
-          cd ..
-          echo F | xcopy .\src\waifu2x_ncnn_vulkan.py test
-          echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd test
-          echo D | xcopy .\models\*.* test\models /s /e
-          cd test
-          ls
-          python -m pytest
+          echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd .\src\waifu2x_ncnn_py
+          pdm run dev
+          pdm run test
 
-      - name: Create upload dist
+      - name: dist
         run: |
           mkdir dist
-          cd dist
-          mkdir models
-          cd ..
-          echo F | xcopy .\src\waifu2x_ncnn_vulkan.py dist
-          echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd dist
-          echo D | xcopy .\models\*.* dist\models /s /e
+          echo D | xcopy .\src\waifu2x_ncnn_py dist
 
       - name: upload
         uses: actions/upload-artifact@v3
