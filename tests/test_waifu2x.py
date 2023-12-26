@@ -1,23 +1,20 @@
 import sys
-import os
-import time
-import numpy as np
-import cv2
-from skimage.metrics import structural_similarity
-from PIL import Image
+from pathlib import Path
 
-try:
-    from waifu2x_ncnn_vulkan import Waifu2x
-except ImportError:
-    from waifu2x_ncnn_py import Waifu2x
+import cv2
+import numpy as np
+from PIL import Image
+from skimage.metrics import structural_similarity
+from waifu2x_ncnn_py import Waifu2x
 
 print("System version: ", sys.version)
 
+filePATH = Path(__file__).resolve().absolute()
 
-def calculate_image_similarity() -> bool:
-    # Load the two images
-    image1 = cv2.imread("./test.png")
-    image2 = cv2.imread("./output.png")
+print("filePATH: ", filePATH)
+
+
+def calculate_image_similarity(image1: np.ndarray, image2: np.ndarray) -> bool:
     # Resize the two images to the same size
     height, width = image1.shape[:2]
     image2 = cv2.resize(image2, (width, height))
@@ -27,13 +24,13 @@ def calculate_image_similarity() -> bool:
     # Calculate the Structural Similarity Index (SSIM) between the two images
     (score, diff) = structural_similarity(grayscale_image1, grayscale_image2, full=True)
     print("SSIM: {}".format(score))
-    return score > 0.5
+    return bool(score > 0.5)
 
 
 _gpuid = -1
 
 
-def test_waifu2x():
+def test_waifu2x() -> None:
     if _gpuid == -1:
         print("USE  ~~~~~~~~~~~~~~~~~CPU~~~~~~~~~~~~~~~~~~")
     else:
@@ -44,15 +41,18 @@ def test_waifu2x():
     out_w = 0
     out_h = 0
 
-    with Image.open("test.png") as image:
+    testimgPATH = filePATH.parent / "test.png"
+    outputimgPATH = filePATH.parent / "output.png"
+
+    with Image.open(str(testimgPATH)) as image:
         out_w = image.width * _scale
         out_h = image.height * _scale
         waifu2x = Waifu2x(gpuid=_gpuid, scale=_scale, noise=0, model="models-upconv_7_anime_style_art_rgb")
         image = waifu2x.process_pil(image)
-        image.save("output.png")
+        image.save(str(outputimgPATH))
 
-    with Image.open("output.png") as image:
+    with Image.open(str(outputimgPATH)) as image:
         assert image.width == out_w
         assert image.height == out_h
 
-    assert calculate_image_similarity()
+    assert calculate_image_similarity(cv2.imread(str(testimgPATH)), cv2.imread(str(outputimgPATH)))
