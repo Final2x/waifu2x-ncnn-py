@@ -10,7 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         os-version: ["macos-latest", "windows-latest", "ubuntu-20.04"]
 
     runs-on: ${{ matrix.os-version }}
@@ -26,7 +26,7 @@ jobs:
 
       - name: vulkan dll
         if: matrix.os-version == 'windows-latest'
-        run: echo F | xcopy .\test\vulkan-1.dll C:\Windows\System32
+        run: echo F | xcopy .\tests\vulkan-1.dll C:\Windows\System32
 
       - name: Check Python version
         run: |
@@ -35,6 +35,5 @@ jobs:
       - name: Test
         run: |
           pip install --upgrade pip chardet
-          pip install -r requirements.txt
-          cd test
+          pip install pathlib opencv-python scikit-image Pillow pytest pytest-cov waifu2x-ncnn-py
           python -m pytest
