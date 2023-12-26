@@ -36,4 +36,4 @@ jobs:
         run: |
           pip install --upgrade pip chardet
           pip install pathlib opencv-python scikit-image Pillow pytest pytest-cov waifu2x-ncnn-py
-          python -m pytest
+          python -m pytest tests
