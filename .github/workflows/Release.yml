@@ -19,7 +19,7 @@ jobs:
   macos:
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: macos-latest
     steps:
@@ -31,10 +31,16 @@ jobs:
         with:
           xcode-version: "14.2.0"
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.11.1
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -82,33 +88,36 @@ jobs:
               ..
           cmake --build . -j 4
 
-      - name: merge-fat-library-py36m
-        if: matrix.python-version == '3.6'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-36m-darwin.so
-      - name: merge-fat-library-py37m
-        if: matrix.python-version == '3.7'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-37m-darwin.so
-      - name: merge-fat-library-py38
+      - name: build python 3.8 wheel
         if: matrix.python-version == '3.8'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
-      - name: merge-fat-library-py39
-        if: matrix.python-version == '3.9'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
-      - name: merge-fat-library-py310
-        if: matrix.python-version == '3.10'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
-      - name: merge-fat-library-py311
-        if: matrix.python-version == '3.11'
-        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
-
-      - name: build wheel
         run: |
-          pip install --upgrade pip chardet
-          pip install twine wheel setuptools
-          pip install -r requirements.txt
-          cp src/waifu2x_ncnn_vulkan.py waifu2x_ncnn_py
-          cp -r models waifu2x_ncnn_py
-          python setup.py bdist_wheel
+          lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
+          pdm build --no-sdist --config-setting="--python-tag=cp38" --config-setting="--plat-name=macosx_10_15_x86_64"
+
+
+      - name: build python 3.9 wheel
+        if: matrix.python-version == '3.9'
+        run: |
+          lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
+          pdm build --no-sdist --config-setting="--python-tag=cp39" --config-setting="--plat-name=macosx_11_0_universal2"
+
+      - name: build python 3.10 wheel
+        if: matrix.python-version == '3.10'
+        run: |
+          lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
+          pdm build --no-sdist --config-setting="--python-tag=cp310" --config-setting="--plat-name=macosx_11_0_universal2"
+
+      - name: build python 3.11 wheel
+        if: matrix.python-version == '3.11'
+        run: |
+          lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
+          pdm build --no-sdist --config-setting="--python-tag=cp311" --config-setting="--plat-name=macosx_11_0_universal2"
+
+      - name: build python 3.12 wheel
+        if: matrix.python-version == '3.12'
+        run: |
+          lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so
+          pdm build --no-sdist --config-setting="--python-tag=cp312" --config-setting="--plat-name=macosx_11_0_universal2"
 
       - name: upload
         uses: actions/upload-artifact@v3
@@ -118,7 +127,7 @@ jobs:
   windows:
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: windows-latest
     steps:
@@ -126,10 +135,16 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.11.1
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -158,18 +173,29 @@ jobs:
           cmake -A x64 -DCMAKE_CXX_FLAGS="-frtti -fexceptions" ..
           cmake --build . --config Release -j 4
 
-      - name: build wheel
+      - name: pre build wheel
         run: |
-          pip install --upgrade pip chardet
-          pip install twine wheel setuptools
-          pip install -r requirements.txt
-          cd waifu2x_ncnn_py
-          mkdir models
-          cd ..
-          echo F | xcopy .\src\waifu2x_ncnn_vulkan.py waifu2x_ncnn_py
-          echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd waifu2x_ncnn_py
-          echo D | xcopy .\models\*.* waifu2x_ncnn_py\models /s /e
-          python setup.py bdist_wheel
+          echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd .\src\waifu2x_ncnn_py
+
+      - name: build python 3.8 wheel
+        if: matrix.python-version == '3.8'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp38" --config-setting="--plat-name=win_amd64"
+
+      - name: build python 3.9 wheel
+        if: matrix.python-version == '3.9'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp39" --config-setting="--plat-name=win_amd64"
+
+      - name: build python 3.10 wheel
+        if: matrix.python-version == '3.10'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp310" --config-setting="--plat-name=win_amd64"
+
+      - name: build python 3.11 wheel
+        if: matrix.python-version == '3.11'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp311" --config-setting="--plat-name=win_amd64"
+
+      - name: build python 3.12 wheel
+        if: matrix.python-version == '3.12'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp312" --config-setting="--plat-name=win_amd64"
 
       - name: upload
         uses: actions/upload-artifact@v3
@@ -179,7 +205,7 @@ jobs:
   linux:
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: ubuntu-20.04
     steps:
@@ -187,10 +213,16 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.11.1
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -222,15 +254,29 @@ jobs:
           cmake -DOpenMP_CXX_FLAGS="-fexceptions -frtti" ..
           cmake --build . -j 4
 
-      - name: build wheel
+      - name: pre build wheel
         run: |
-          pip install --upgrade pip chardet
-          pip install twine wheel setuptools
-          pip install -r requirements.txt
-          cp src/waifu2x_ncnn_vulkan.py waifu2x_ncnn_py
-          cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so waifu2x_ncnn_py
-          cp -r models waifu2x_ncnn_py
-          python setup.py bdist_wheel
+          cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so src/waifu2x_ncnn_py
+
+      - name: build python 3.8 wheel
+        if: matrix.python-version == '3.8'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp38" --config-setting="--plat-name=manylinux1_x86_64"
+
+      - name: build python 3.9 wheel
+        if: matrix.python-version == '3.9'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp39" --config-setting="--plat-name=manylinux1_x86_64"
+
+      - name: build python 3.10 wheel
+        if: matrix.python-version == '3.10'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp310" --config-setting="--plat-name=manylinux1_x86_64"
+
+      - name: build python 3.11 wheel
+        if: matrix.python-version == '3.11'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp311" --config-setting="--plat-name=manylinux1_x86_64"
+
+      - name: build python 3.12 wheel
+        if: matrix.python-version == '3.12'
+        run: pdm build --no-sdist --config-setting="--python-tag=cp312" --config-setting="--plat-name=manylinux1_x86_64"
 
       - name: upload
         uses: actions/upload-artifact@v3
