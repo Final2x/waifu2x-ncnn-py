@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-          version: 2.8.2
+          version: 2.11.1
           prerelease: false
           enable-pep582: false
           allow-python-prereleases: false
