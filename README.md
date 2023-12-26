@@ -1,5 +1,5 @@
 # waifu2x-ncnn-py
-Python Binding for waifu2x-ncnn-vulkan with PyBind11 
+Python Binding for waifu2x-ncnn-vulkan with PyBind11
 
 [![PyPI version](https://badge.fury.io/py/waifu2x-ncnn-py.svg?123456)](https://badge.fury.io/py/waifu2x-ncnn-py?123456) [![test_pip](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/test_pip.yml) [![Release](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml/badge.svg)](https://github.com/Tohrusky/waifu2x-ncnn-py/actions/workflows/Release.yml)
 
@@ -31,7 +31,7 @@ apt install -y libomp5 libvulkan-dev
 Then, import the Waifu2x class from the package:
 
 ```python
-from waifu2x_ncnn_py import Waifu2x
+from src.waifu2x_ncnn_py import Waifu2x
 ```
 To initialize the model:
 
@@ -66,7 +66,7 @@ cv2.imencode(".jpg", image)[1].tofile("output_cv2.jpg")
 ```python
 import subprocess as sp
 # your ffmpeg parameters
-command_out = [FFMPEG_BIN,........] 
+command_out = [FFMPEG_BIN,........]
 command_in = [FFMPEG_BIN,........]
 pipe_out = sp.Popen(command_out, stdout=sp.PIPE, bufsize=10 ** 8)
 pipe_in = sp.Popen(command_in, stdin=sp.PIPE)
@@ -79,7 +79,7 @@ while True:
     pipe_in.stdin.write(raw_image)
 ```
 # Build
-[here](https://github.com/Tohrusky/waifu2x-ncnn-py/blob/main/.github/workflows/Release.yml) 
+[here](https://github.com/Tohrusky/waifu2x-ncnn-py/blob/main/.github/workflows/Release.yml)
 
 *The project just only been tested in Ubuntu 18+ and Debian 9+ environments on Linux, so if the project does not work on your system, please try building it.*
 
@@ -91,9 +91,9 @@ The following references were used in the development of this project:
 
 [Waifu2x](https://github.com/nagadomi/waifu2x) - Waifu2x is an Image Super-Resolution algorithm for Anime-style art using Deep Convolutional Neural Networks. And it supports photo.
 
-[media2x/waifu2x-ncnn-vulkan-python](https://github.com/media2x/waifu2x-ncnn-vulkan-python) - This project was used as a reference for implementing the wrapper. *Special thanks* to the original author for sharing the code. 
+[media2x/waifu2x-ncnn-vulkan-python](https://github.com/media2x/waifu2x-ncnn-vulkan-python) - This project was used as a reference for implementing the wrapper. *Special thanks* to the original author for sharing the code.
 
-[ncnn](https://github.com/Tencent/ncnn) - ncnn is a high-performance neural network inference framework developed by Tencent AI Lab. 
+[ncnn](https://github.com/Tencent/ncnn) - ncnn is a high-performance neural network inference framework developed by Tencent AI Lab.
 
 # License
 This project is licensed under the BSD 3-Clause - see the [LICENSE file](https://github.com/Tohrusky/realcugan-ncnn-py/blob/main/LICENSE) for details.

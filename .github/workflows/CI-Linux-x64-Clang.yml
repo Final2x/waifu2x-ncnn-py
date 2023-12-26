@@ -48,7 +48,7 @@ jobs:
           wget https://github.com/Tohrusky/realcugan-ncnn-vulkan-build-macOS/releases/download/v0.0.1/vulkansdk-linux-x86_64-1.2.162.1.tar.gz -O vulkansdk-linux-x86_64-1.2.162.1.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.162.1.tar.gz
           rm -rf 1.2.162.1/source 1.2.162.1/samples
-          find 1.2.162.1 -type f | grep -v -E 'vulkan|glslang' | xargs rm          
+          find 1.2.162.1 -type f | grep -v -E 'vulkan|glslang' | xargs rm
 
       - name: build
         env:
@@ -63,14 +63,14 @@ jobs:
 
       - name: Test
         run: |
-          pip install --upgrade pip chardet         
+          pip install --upgrade pip chardet
           pip install -r requirements.txt
           cp src/waifu2x_ncnn_vulkan.py test
           cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so test
           cp -r models test
           cd test
           ls
-          python -m pytest   
+          python -m pytest
 
       - name: Upload dist
         run: |

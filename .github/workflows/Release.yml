@@ -151,7 +151,7 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://github.com/Tohrusky/realcugan-ncnn-vulkan-build-macOS/releases/download/v0.0.1/VulkanSDK-1.2.162.1-Installer.exe -OutFile VulkanSDK-1.2.162.1-Installer.exe
           7z x -aoa ./VulkanSDK-1.2.162.1-Installer.exe -oVulkanSDK
-          Remove-Item .\VulkanSDK\Demos, .\VulkanSDK\Samples, .\VulkanSDK\Third-Party, .\VulkanSDK\Tools, .\VulkanSDK\Tools32, .\VulkanSDK\Bin32, .\VulkanSDK\Lib32 -Recurse          
+          Remove-Item .\VulkanSDK\Demos, .\VulkanSDK\Samples, .\VulkanSDK\Third-Party, .\VulkanSDK\Tools, .\VulkanSDK\Tools32, .\VulkanSDK\Bin32, .\VulkanSDK\Lib32 -Recurse
 
       - name: Build
         run: |
@@ -160,7 +160,7 @@ jobs:
           cd src
           mkdir build && cd build
           cmake -A x64 -DCMAKE_CXX_FLAGS="-frtti -fexceptions" ..
-          cmake --build . --config Release -j 4 
+          cmake --build . --config Release -j 4
 
       - name: build wheel
         run: |
@@ -213,7 +213,7 @@ jobs:
           wget https://github.com/Tohrusky/realcugan-ncnn-vulkan-build-macOS/releases/download/v0.0.1/vulkansdk-linux-x86_64-1.2.162.1.tar.gz -O vulkansdk-linux-x86_64-1.2.162.1.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.162.1.tar.gz
           rm -rf 1.2.162.1/source 1.2.162.1/samples
-          find 1.2.162.1 -type f | grep -v -E 'vulkan|glslang' | xargs rm          
+          find 1.2.162.1 -type f | grep -v -E 'vulkan|glslang' | xargs rm
 
       - name: build
         env:
@@ -270,5 +270,3 @@ jobs:
           draft: false
           prerelease: false
           files: dist/*
-
-

@@ -3,8 +3,8 @@ name: test_pip
 on:
   schedule:
     - cron: "0 19 * 1 *"
-  workflow_dispatch: 
-    
+  workflow_dispatch:
+
 jobs:
 
   test:
@@ -18,23 +18,23 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-          
-      - uses: actions/setup-python@v4 
+
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-          
+
       - name: vulkan dll
         if: matrix.os-version == 'windows-latest'
         run: echo F | xcopy .\test\vulkan-1.dll C:\Windows\System32
-                  
+
       - name: Check Python version
         run: |
           python --version
- 
+
       - name: Test
         run: |
-          pip install --upgrade pip chardet          
+          pip install --upgrade pip chardet
           pip install -r requirements.txt
           cd test
           python -m pytest

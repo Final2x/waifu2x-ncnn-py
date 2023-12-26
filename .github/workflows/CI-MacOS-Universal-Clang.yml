@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
-    
+
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -106,7 +106,7 @@ jobs:
 
       - name: Test
         run: |
-          pip install --upgrade pip chardet        
+          pip install --upgrade pip chardet
           pip install -r requirements.txt
           cp src/waifu2x_ncnn_vulkan.py test
           cp dist/waifu2x_ncnn_vulkan_wrapper.*.so test
@@ -126,4 +126,3 @@ jobs:
         with:
           name: waifu2x-ncnn-macos-python${{ matrix.python-version }}
           path: dist
-

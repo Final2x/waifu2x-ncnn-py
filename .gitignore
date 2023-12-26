@@ -161,3 +161,4 @@ cython_debug/
 .idea/
 /src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.*.so
 /.ruff_cache/
+/tests/output.png
