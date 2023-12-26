@@ -94,7 +94,6 @@ jobs:
           lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
           pdm build --no-sdist --config-setting="--python-tag=cp38" --config-setting="--plat-name=macosx_10_15_x86_64"
 
-
       - name: build python 3.9 wheel
         if: matrix.python-version == '3.9'
         run: |
