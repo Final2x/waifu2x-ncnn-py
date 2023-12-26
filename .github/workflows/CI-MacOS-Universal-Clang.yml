@@ -91,23 +91,22 @@ jobs:
 
       - name: merge-fat-library-py38
         if: matrix.python-version == '3.8'
-        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
+        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-38-darwin.so
       - name: merge-fat-library-py39
         if: matrix.python-version == '3.9'
-        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
+        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-39-darwin.so
       - name: merge-fat-library-py310
         if: matrix.python-version == '3.10'
-        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
+        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-310-darwin.so
       - name: merge-fat-library-py311
         if: matrix.python-version == '3.11'
-        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
+        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-311-darwin.so
       - name: merge-fat-library-py312
         if: matrix.python-version == '3.12'
-        run: mkdir -p lib && lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so -o lib/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so
+        run: lipo -create src/build-arm64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so src/build-x86_64/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so -o src/waifu2x_ncnn_py/waifu2x_ncnn_vulkan_wrapper.cpython-312-darwin.so
 
       - name: Test
         run: |
-          cp lib/waifu2x_ncnn_vulkan_wrapper.*.so src/waifu2x_ncnn_py
           pdm run dev
           pdm run test
 
