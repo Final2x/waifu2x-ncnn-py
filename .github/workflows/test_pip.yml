@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   test:
     strategy:
       matrix:
