@@ -56,7 +56,7 @@ help = "Run tests with coverage"
 composite = [
     "ruff check . --fix --exit-non-zero-on-fix",
     "ruff format .",
-    "mypy src tests",
+    "mypy src/waifu2x_ncnn_py tests",
 ]
 help = "Check code style against linters"
 

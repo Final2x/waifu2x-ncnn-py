@@ -18,7 +18,12 @@ jobs:
   Linux-x64-Clang:
     strategy:
       matrix:
-        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        python-version: [ "3.8", "3.9", "3.10", "3.11" , "3.12" ]
+
+
+
+
+
 
     runs-on: ubuntu-20.04
     steps:
@@ -26,10 +31,16 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
+        name: Setup PDM
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
+          version: 2.8.2
+          prerelease: false
+          enable-pep582: false
+          allow-python-prereleases: false
+          update-python: true
 
       - name: Check Python version
         run: |
@@ -63,21 +74,14 @@ jobs:
 
       - name: Test
         run: |
-          pip install --upgrade pip chardet
-          pip install -r requirements.txt
-          cp src/waifu2x_ncnn_vulkan.py test
-          cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so test
-          cp -r models test
-          cd test
-          ls
-          python -m pytest
+          cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so src/waifu2x_ncnn_py
+          pdm run dev
+          pdm run test
 
-      - name: Upload dist
+      - name: dist
         run: |
           mkdir dist
-          cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so dist
-          cp src/waifu2x_ncnn_vulkan.py dist
-          cp -r models dist
+          cp src/waifu2x_ncnn_py dist
 
       - name: upload
         uses: actions/upload-artifact@v3
