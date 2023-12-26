@@ -14,7 +14,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   Linux-x64-Clang:
     strategy:
       matrix:
