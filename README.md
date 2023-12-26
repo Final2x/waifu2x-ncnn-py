@@ -36,7 +36,7 @@ from src.waifu2x_ncnn_py import Waifu2x
 To initialize the model:
 
 ```python
-waifu2x = Waifu2x(gpuid: int = 0, tta_mode: bool = False, num_threads: int = 1, noise: int = 0, scale: int = 2, tilesize: int = 0, model: str = "models-cunet", **_kwargs)
+waifu2x = Waifu2x(gpuid: int = 0, tta_mode: bool = False, num_threads: int = 1, noise: int = 0, scale: int = 2, tilesize: int = 0, model: str = "models-cunet")
 # model can be "models-cunet", "models-upconv_7_anime_style_art_rgb" and "models-upconv_7_photo"
 # or an absolute path to the models' directory
 ```

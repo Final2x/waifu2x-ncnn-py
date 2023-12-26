@@ -73,7 +73,7 @@ jobs:
       - name: dist
         run: |
           mkdir dist
-          cp src/waifu2x_ncnn_py dist
+          cp -r src/waifu2x_ncnn_py dist
 
       - name: upload
         uses: actions/upload-artifact@v3
