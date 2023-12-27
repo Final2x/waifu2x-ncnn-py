@@ -67,7 +67,7 @@ jobs:
         run: |
           echo F | xcopy .\src\build\Release\waifu2x_ncnn_vulkan_wrapper.*.pyd .\src\waifu2x_ncnn_py
           echo F | xcopy .\tests\vulkan-1.dll .\src\waifu2x_ncnn_py
-          pdm run dev
+          pdm install
           pdm run test
 
       - name: dist
