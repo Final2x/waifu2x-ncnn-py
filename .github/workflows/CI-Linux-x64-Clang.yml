@@ -69,7 +69,7 @@ jobs:
       - name: Test
         run: |
           cp src/build/waifu2x_ncnn_vulkan_wrapper.*.so src/waifu2x_ncnn_py
-          pdm run dev
+          pdm install
           pdm run test
 
       - name: dist

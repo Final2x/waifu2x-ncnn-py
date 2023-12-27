@@ -107,7 +107,7 @@ jobs:
 
       - name: Test
         run: |
-          pdm run dev
+          pdm install
           pdm run test
 
       - name: dist

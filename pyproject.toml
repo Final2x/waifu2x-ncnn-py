@@ -50,20 +50,19 @@ test = [
   "scikit-image"
 ]
 
-[tool.pdm.scripts.dev]
-composite = [
-  "pdm install --dev",
-  "pre-commit install"
-]
-help = "Install the dev packages"
-
 [tool.pdm.scripts.lint]
 composite = [
+  "mypy src/waifu2x_ncnn_py tests",
   "ruff check . --fix --exit-non-zero-on-fix",
-  "ruff format .",
-  "mypy src/waifu2x_ncnn_py tests"
+  "ruff format ."
 ]
 help = "Check code style against linters"
+
+[tool.pdm.scripts.post_install]
+composite = [
+  "pre-commit install"
+]
+help = "Install the pre-commit hook"
 
 [tool.pdm.scripts.test]
 cmd = "pytest tests --cov=src --cov-report=xml --cov-report=html"
