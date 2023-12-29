@@ -1,9 +1,9 @@
+import os
 import sys
 from pathlib import Path
 
 import cv2
 import numpy as np
-from PIL import Image
 from skimage.metrics import structural_similarity
 from waifu2x_ncnn_py import Waifu2x
 
@@ -24,35 +24,39 @@ def calculate_image_similarity(image1: np.ndarray, image2: np.ndarray) -> bool:
     # Calculate the Structural Similarity Index (SSIM) between the two images
     (score, diff) = structural_similarity(grayscale_image1, grayscale_image2, full=True)
     print("SSIM: {}".format(score))
-    return bool(score > 0.5)
+    return bool(score > 0.8)
 
 
-_gpuid = -1
+_gpuid = 0
+
+# gpuid = -1 when in GitHub Actions
+if os.environ.get("GITHUB_ACTIONS") == "true":
+    _gpuid = -1
+
+TEST_IMG = cv2.imread(str(filePATH.parent / "test.png"))
 
 
-def test_waifu2x() -> None:
-    if _gpuid == -1:
-        print("USE  ~~~~~~~~~~~~~~~~~CPU~~~~~~~~~~~~~~~~~~")
-    else:
-        print("USE  ~~~~~~~~~~~~~~~~~GPU~~~~~~~~~~~~~~~~~~")
+if _gpuid == -1:
+    print("USE  ~~~~~~~~~~~~~~~~~CPU~~~~~~~~~~~~~~~~~~")
+else:
+    print("USE  ~~~~~~~~~~~~~~~~~GPU~~~~~~~~~~~~~~~~~~")
 
-    _scale = 2
 
-    out_w = 0
-    out_h = 0
+class Test_Waifu2x:
+    def test_waifu2x_cunet(self) -> None:
+        waifu2x = Waifu2x(gpuid=_gpuid, scale=2)
+        outimg = waifu2x.process_cv2(TEST_IMG)
 
-    testimgPATH = filePATH.parent / "test.png"
-    outputimgPATH = filePATH.parent / "output.png"
+        assert calculate_image_similarity(TEST_IMG, outimg)
 
-    with Image.open(str(testimgPATH)) as image:
-        out_w = image.width * _scale
-        out_h = image.height * _scale
-        waifu2x = Waifu2x(gpuid=_gpuid, scale=_scale, noise=0, model="models-upconv_7_anime_style_art_rgb")
-        image = waifu2x.process_pil(image)
-        image.save(str(outputimgPATH))
+    def test_waifu2x_upconv_7_anime_style_art_rgb(self) -> None:
+        waifu2x = Waifu2x(gpuid=_gpuid, scale=2, model="models-upconv_7_anime_style_art_rgb")
+        outimg = waifu2x.process_cv2(TEST_IMG)
 
-    with Image.open(str(outputimgPATH)) as image:
-        assert image.width == out_w
-        assert image.height == out_h
+        assert calculate_image_similarity(TEST_IMG, outimg)
 
-    assert calculate_image_similarity(cv2.imread(str(testimgPATH)), cv2.imread(str(outputimgPATH)))
+    def test_waifu2x_upconv_7_photo(self) -> None:
+        waifu2x = Waifu2x(gpuid=_gpuid, scale=2, model="models-upconv_7_photo")
+        outimg = waifu2x.process_cv2(TEST_IMG)
+
+        assert calculate_image_similarity(TEST_IMG, outimg)
