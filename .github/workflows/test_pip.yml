@@ -5,6 +5,9 @@ on:
     - cron: "0 19 * 1 *"
   workflow_dispatch:
 
+env:
+  GITHUB_ACTIONS: true
+
 jobs:
   test:
     strategy:

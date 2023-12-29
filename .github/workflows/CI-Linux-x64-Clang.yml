@@ -13,6 +13,9 @@ on:
       - LICENSE
   workflow_dispatch:
 
+env:
+  GITHUB_ACTIONS: true
+
 jobs:
   Linux-x64-Clang:
     strategy:
